@@ -1,0 +1,155 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agentes de Valorant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'valorant/styles.css' %}">
+</head>
+
+<body class="min-h-screen bg-[#0f1923] text-white">
+
+    <!-- Volver -->
+    <div class="px-6 pt-6">
+        <a href="/" class="inline-flex items-center gap-2 text-[#ff4655] text-sm font-semibold tracking-widest uppercase opacity-75 hover:opacity-100 transition-opacity">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#ff4655" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="12 8 4 8"/>
+                <polyline points="8 12 4 8 8 4"/>
+            </svg>
+            Volver al inicio
+        </a>
+    </div>
+
+    <!-- Header -->
+    <header class="pt-10 pb-6 px-6 text-center">
+        <p class="text-[#ff4655] text-xs font-semibold tracking-[0.3em] uppercase mb-2">Riot Games</p>
+        <h1 class="text-7xl md:text-8xl tracking-wider mb-3">AGENTES</h1>
+        <div class="divider w-48 mx-auto mb-4"></div>
+    </header>
+
+    <!-- Filtros -->
+    <div id="filters" class="hidden flex-wrap justify-center gap-2 px-6 mb-10">
+        <button class="filter-btn active px-5 py-1.5 text-sm text-white border border-white/10 rounded tracking-wider font-semibold transition-all" data-role="Todos">
+            Todos
+        </button>
+    </div>
+
+    <!-- Grid -->
+    <main class="max-w-7xl mx-auto px-4 pb-16">
+        <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center pb-10 text-gray-600 text-xs tracking-widest uppercase">
+        Primer Práctico &copy; Django
+    </footer>
+
+    <!-- Datos desde Django -->
+    {{ agentes|json_script:"agentes-data" }}
+
+    <script>
+        // Configuración visual de roles
+        const roleConfig = {
+            'duelist':    { label:'Duelista',    color:'#ff7b85', bg:'rgba(255,70,85,0.15)' },
+            'initiator':  { label:'Iniciador',   color:'#5de0f5', bg:'rgba(0,212,255,0.12)' },
+            'controller': { label:'Controlador', color:'#c39bd3', bg:'rgba(155,89,182,0.15)' },
+            'sentinel':   { label:'Centinela',   color:'#f7c25a', bg:'rgba(243,156,18,0.12)' },
+        };
+
+        // Obtener datos desde Django
+        const allAgents = JSON.parse(
+            document.getElementById('agentes-data').textContent
+        ).map(a => ({
+            displayName: a.nombre,
+            displayIcon: a.imagen,
+            role: {
+                displayName: a.rol_display
+            }
+        }));
+
+        // Ordenar alfabéticamente
+        allAgents.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+        // Crear card de agente
+        function card(a) {
+            const key = a.role?.displayName?.toLowerCase() || '';
+            const r = roleConfig[key] || {
+                label: a.role?.displayName || '',
+                color:'#aaa',
+                bg:'rgba(255,255,255,0.08)'
+            };
+
+            return `
+                <div class="card rounded-lg overflow-hidden border border-[rgba(255,70,85,0.15)] bg-[#111c27] cursor-pointer" data-role="${key}">
+                    <div class="overflow-hidden bg-[#0f1923]">
+                        <img src="${a.displayIcon}" alt="${a.displayName}" class="w-full aspect-square object-cover object-top" loading="lazy"/>
+                    </div>
+                    <div class="px-3 py-2.5">
+                        <p class="agent-name text-xl tracking-wider mb-1" style="color:${r.color}">
+                            ${a.displayName}
+                        </p>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded tracking-wider"
+                            style="background:${r.bg};color:${r.color}">
+                            ${r.label}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renderizar agentes
+        function render(list) {
+            document.getElementById('grid').innerHTML = list.map(card).join('');
+        }
+
+        // Crear filtros por rol
+        function buildFilters(agents) {
+            const bar = document.getElementById('filters');
+            const seen = new Set();
+
+            agents.forEach(a => {
+                const key = a.role?.displayName?.toLowerCase() || '';
+                if (!key || seen.has(key)) return;
+
+                seen.add(key);
+                const label = roleConfig[key]?.label || a.role.displayName;
+
+                bar.innerHTML += `
+                    <button class="filter-btn px-5 py-1.5 text-sm text-gray-300 border border-white/10 rounded tracking-wider font-semibold transition-all"
+                            data-role="${key}">
+                        ${label}
+                    </button>
+                `;
+            });
+
+            bar.classList.remove('hidden');
+            bar.classList.add('flex');
+
+            bar.addEventListener('click', e => {
+                const btn = e.target.closest('.filter-btn');
+                if (!btn) return;
+
+                bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const role = btn.dataset.role;
+
+                render(
+                    role === 'Todos'
+                        ? allAgents
+                        : allAgents.filter(a => a.role?.displayName?.toLowerCase() === role)
+                );
+            });
+        }
+
+        // Inicializar
+        buildFilters(allAgents);
+        render(allAgents);
+    </script>
+
+</body>
+</html>
