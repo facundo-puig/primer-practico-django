@@ -33,7 +33,7 @@
 
     <!-- Filtros -->
     <div id="filters" class="hidden flex-wrap justify-center gap-2 px-6 mb-10">
-        <button class="filter-btn active px-5 py-1.5 text-sm text-white border border-white/10 rounded tracking-wider font-semibold transition-all" data-role="Todos">
+        <button class="filter-btn active px-5 py-1.5 text-sm text-white border border-white/10 rounded tracking-wider font-semibold transition-all" data-role="todos">
             Todos
         </button>
     </div>
@@ -54,10 +54,10 @@
     <script>
         // Configuración visual de roles
         const roleConfig = {
-            'duelist':    { label:'Duelista',    color:'#ff7b85', bg:'rgba(255,70,85,0.15)' },
-            'initiator':  { label:'Iniciador',   color:'#5de0f5', bg:'rgba(0,212,255,0.12)' },
-            'controller': { label:'Controlador', color:'#c39bd3', bg:'rgba(155,89,182,0.15)' },
-            'sentinel':   { label:'Centinela',   color:'#f7c25a', bg:'rgba(243,156,18,0.12)' },
+            'duelista':    { color:'#ff7b85', bg:'rgba(255,70,85,0.15)' },
+            'iniciador':   { color:'#5de0f5', bg:'rgba(0,212,255,0.12)' },
+            'controlador': { color:'#c39bd3', bg:'rgba(155,89,182,0.15)' },
+            'centinela':   { color:'#f7c25a', bg:'rgba(243,156,18,0.12)' },
         };
 
         // Obtener datos desde Django
@@ -77,11 +77,8 @@
         // Crear card de agente
         function card(a) {
             const key = a.role?.displayName?.toLowerCase() || '';
-            const r = roleConfig[key] || {
-                label: a.role?.displayName || '',
-                color:'#aaa',
-                bg:'rgba(255,255,255,0.08)'
-            };
+            const r = roleConfig[key] || { color:'#aaa', bg:'rgba(255,255,255,0.08)' };
+            const label = a.role?.displayName || key;
 
             return `
                 <div class="card rounded-lg overflow-hidden border border-[rgba(255,70,85,0.15)] bg-[#111c27] cursor-pointer" data-role="${key}">
@@ -94,7 +91,7 @@
                         </p>
                         <span class="text-xs font-semibold px-2 py-0.5 rounded tracking-wider"
                             style="background:${r.bg};color:${r.color}">
-                            ${r.label}
+                            ${label}
                         </span>
                     </div>
                 </div>
@@ -139,7 +136,7 @@
                 const role = btn.dataset.role;
 
                 render(
-                    role === 'Todos'
+                    role === 'todos'
                         ? allAgents
                         : allAgents.filter(a => a.role?.displayName?.toLowerCase() === role)
                 );
