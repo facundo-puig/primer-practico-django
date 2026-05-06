@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primer Práctico Django</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'nucleo/styles.css' %}">
+</head>
+<body class="min-h-screen bg-[#0f1923] text-white flex flex-col items-center justify-center px-6">
+
+  <p class="text-[#ff4655] text-xs font-semibold tracking-[0.35em] uppercase mb-4">Desarrollo Web · Django</p>
+
+  <h1 class="text-7xl md:text-9xl tracking-wider text-center leading-none">
+    Primer<br/>
+    <span class="text-[#ff4655]">Práctico</span><br/>
+    Django
+  </h1>
+
+  <div class="divider w-48 my-6"></div>
+
+  <a href="/valorant/"
+    class="clip-btn inline-flex items-center gap-2 bg-[#ff4655] hover:bg-[#e03040] px-8 py-3 font-bold text-sm tracking-widest uppercase transition-all hover:-translate-y-0.5">
+    Ver agentes de Valorant
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 8 12 8"/><polyline points="8 4 12 8 8 12"/>
+    </svg>
+  </a>
+
+  <footer class="absolute bottom-6 text-gray-700 text-xs tracking-widest uppercase">
+    Primer Práctico &copy; Django
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+body { font-family: 'Rajdhani', sans-serif; }
+h1   { font-family: 'Bebas Neue', sans-serif; }
+.clip-btn { clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%); }
+.divider  { background: linear-gradient(90deg, transparent, #ff4655, transparent); height: 1px; }

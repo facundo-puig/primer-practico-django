@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva Habilidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'valorant/styles.css' %}">
+</head>
+<body class="min-h-screen bg-[#0f1923] text-white">
+
+    <div class="px-6 pt-6">
+        <a href="{% url 'habilidades' %}" class="inline-flex items-center gap-2 text-[#ff4655] text-sm font-semibold tracking-widest uppercase opacity-75 hover:opacity-100 transition-opacity">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#ff4655" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="12 8 4 8"/><polyline points="8 12 4 8 8 4"/>
+            </svg>
+            Volver a habilidades
+        </a>
+    </div>
+
+    <header class="pt-10 pb-6 px-6 text-center">
+        <p class="text-[#ff4655] text-xs font-semibold tracking-[0.3em] uppercase mb-2">Riot Games</p>
+        <h1 class="text-5xl md:text-6xl tracking-wider mb-3">NUEVA HABILIDAD</h1>
+        <div class="divider w-48 mx-auto mb-4"></div>
+    </header>
+
+    <main class="max-w-lg mx-auto px-4 pb-16">
+        <form method="POST" class="flex flex-col gap-4">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="flex flex-col gap-1">
+                <label class="text-[#ff4655] text-xs font-bold tracking-widest uppercase">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="text-red-400 text-xs">{{ field.errors }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="mt-4 py-2 bg-[#ff4655] text-white text-sm font-bold tracking-widest uppercase rounded hover:bg-[#e03040] transition-colors">
+                Guardar
+            </button>
+        </form>
+    </main>
+</body>
+</html>
